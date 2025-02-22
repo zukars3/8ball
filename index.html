@@ -1,0 +1,434 @@
+<html>
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    </head>
+    <body>
+        <div class="container">
+            <div class="big-circle" id="big-circle">
+                <div class="small-circle">
+                    <div class="triangle">
+                        <div class="triangle-text" id="ball-text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="question-container">
+            <div class="question-input-container">
+                <input type="text" class="question-input" id="question" placeholder="Ask your question here" oninput="checkInput()">
+                <button class="ask-button" id="ask-button" onclick="getAnswer()" disabled>...?</button>
+            </div>
+            <div class="question-history">
+                <div id="history"></div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<style>
+:root {
+    --triangle-color: rgba(0, 0, 255, 0.8);
+    --text-color: rgba(0, 0, 255, 1);
+}
+
+body {
+    font-family: 'Raleway';
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.6) 10%, black 70%);
+}
+
+.question-container {
+    height: 50%;
+    position: absolute;
+    top: 25%;
+    left: 5%;
+    width: 15%;
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.question-input-container {
+    display: flex;
+    gap: 5px;
+}
+
+.question-input {
+    width: 100%;
+    border-radius: 5px;
+    background-color: rgb(36, 36, 36);
+    color: white;
+    font-family: 'Raleway';
+    border: 1px solid black;
+    border-radius: 5px;
+    height: 30px;
+    font-family: 'Raleway';
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.ask-button {
+    font-family: 'Raleway';
+    height: 30px;
+    width: 30px;
+    border-radius: 5px;
+    background-color: rgb(36, 36, 36);
+    color: white;
+    text-align: center;
+}
+
+.question-history {
+    color: rgb(36, 36, 36);
+}
+
+#history {
+    max-height: calc(100% - 30px);
+    overflow-y: auto;
+    margin-top: 10px;
+    margin-right: -10px;
+    overflow-wrap: break-word;
+}
+
+.history-item {
+    margin-top: 10px;
+}
+
+.history-question {
+    font-weight: bold;
+}
+
+.history-answer {
+    font-style: italic;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.big-circle {
+    height: 48vw;
+    width: 48vw;
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.6) 10%, black 70%);
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.small-circle {
+    height: 26vw;
+    width: 26vw;
+    background-color: black;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, var(--triangle-color) 0%, black 60%);
+}
+
+.triangle {
+    margin-top: 6vw;
+    width: 0;
+    height: 0;
+    border-left: 10vw solid transparent;
+    border-right: 10vw solid transparent;
+    border-top: 15vw solid black;
+    filter: drop-shadow(0px 0px 5px var(--triangle-color));
+    background-color: radial-gradient(circle, var(--triangle-color) 0%, black 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    transition: filter 0.3s ease;
+}
+
+.triangle-text {
+    min-width: 9vw;
+    margin-top: -20vw;
+    font-size: 1.7vw;
+    color: var(--text-color);
+    font-weight: bold;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar-thumb {
+    background: darkgray;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: lightgray;
+}
+
+@keyframes diagonalShake {
+  0% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(12px, -12px);
+  }
+  20% {
+    transform: translate(-12px, 12px);
+  }
+  30% {
+    transform: translate(12px, -12px);
+  }
+  40% {
+    transform: translate(-10px, 10px);
+  }
+  50% {
+    transform: translate(10px, -10px);
+  }
+  60% {
+    transform: translate(-10px, 10px);
+  }
+  70% {
+    transform: translate(5px, -5px);
+  }
+  80% {
+    transform: translate(-5px, 5px);
+  }
+  90% {
+    transform: translate(5px, -5px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+.shake-element {
+  display: inline-block;
+}
+
+.shaking {
+  animation: diagonalShake 2s ease-in-out;
+}
+
+@media only screen and (max-device-width: 768px) {
+    .question-container {
+        height: 30vh;
+        position: relative;
+        top: 2%;
+        left: 5vw;
+        width: 85vw;
+    }
+
+    .question-input-container {
+        display: flex;
+        gap: 15px;
+    }
+
+    .question-input {
+        background-color: rgb(36, 36, 36);
+        color: white;
+        height: 60px;
+        font-size: 30px;
+    }
+
+    .ask-button {
+        height: 60px;
+        width: 75px;
+        font-size: 4vw;
+    }
+
+    #history {
+        max-height: calc(100% - 60px);
+    }
+    
+    .question-history {
+        color: white;
+    }
+    
+    .container {
+        width: 100%;
+        height: auto;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .big-circle {
+        height: 90vw;
+        width: 90vw;
+        top: 10;
+        position: relative;
+    }
+    
+    .small-circle {
+        height: 48vw;
+        width: 48vw;
+    }
+
+    .triangle {
+        border-left: 18vw solid transparent;
+        border-right: 18vw solid transparent;
+        border-top: 28vw solid black;
+    }
+
+    .triangle-text {
+        min-width: 19vw;
+        margin-top: -37vw;
+        font-size: 3vw;
+    }
+}
+</style>
+
+<script>
+let questionHistory = []
+
+function checkInput() {
+    let input = document.getElementById('question').value
+
+    document.getElementById('ask-button').disabled = input.length < 1
+}
+
+function delay(ms) {
+    return new Promise((resolve, reject) => setTimeout(resolve, ms))
+}
+
+async function getAnswer() {
+    let input = document.getElementById('question')
+    let history = document.getElementById('history')
+    let ballText = document.getElementById('ball-text')
+    let ball = document.getElementById('big-circle')
+    
+    document.getElementById('ask-button').disabled = true
+    input.disabled = true
+
+    ball.classList.add('shaking')
+
+    ball.addEventListener('animationend', () => {
+      ball.classList.remove('shaking')
+    })
+
+    for (let i = 0; i < 20; i++) {
+        let number = Math.floor(Math.random() * 20)
+
+        switch (number) {
+            case 0:
+                result = 'It is certain'
+                break;
+            case 1:
+                result = 'It is decidedly so'
+                break;
+            case 2:
+                result = 'Without a doubt'
+                break;
+            case 3:
+                result = 'Yes - definitely'
+                break;
+            case 4:
+                result = 'You may rely on it'
+                break;
+            case 5:
+                result = 'As I see it, yes'
+                break;
+            case 6:
+                result = 'Most likely'
+                break;
+            case 7:
+                result = 'Outlook good'
+                break;
+            case 8:
+                result = 'Yes'
+                break;
+            case 9:
+                result = 'Signs point to yes'
+                break;
+            case 10:
+                result = 'Reply hazy, try again'
+                break;
+            case 11:
+                result = 'Ask again later'
+                break;
+            case 12:
+                result = 'Better not tell you now'
+                break;
+            case 13:
+                result = 'Cannot predict now'
+                break;
+            case 14:
+                result = 'Concentrate and ask again'
+                break;
+            case 15:
+                result = "Don't count on it"
+                break;
+            case 16:
+                result = 'My reply is no'
+                break;
+            case 17:
+                result = 'My sources say no'
+                break;
+            case 18:
+                result = 'Outlook not so good'
+                break;
+            case 19:
+                result = 'Very doubtful'
+                break;
+            default:
+                result = 'No answer'
+                break;
+            }
+
+        setTimeout(() => {
+            ballText.innerHTML = result
+
+            if (number < 10) {
+                document.documentElement.style.setProperty('--triangle-color', 'green');
+                document.documentElement.style.setProperty('--text-color', 'green');
+            } else if (number < 15) {
+                document.documentElement.style.setProperty('--triangle-color', 'yellow');
+                document.documentElement.style.setProperty('--text-color', 'yellow');
+            } else {
+                document.documentElement.style.setProperty('--triangle-color', 'red');
+                document.documentElement.style.setProperty('--text-color', 'red');
+            }
+        }, 15 * i)
+
+        await delay(15 * i)
+    }
+    
+    questionHistory.unshift({
+        question: input.value,
+        answer: '- ' + result
+    })
+
+    history.innerHTML = questionHistory.map((item) => `<div class="history-item"><div class="history-question">${item.question}</div><div class="history-answer">${item.answer}</div></div>`).join('');
+    input.value = ''
+    input.disabled = false
+
+    checkInput()
+}
+</script>
