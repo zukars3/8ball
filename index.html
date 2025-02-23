@@ -32,12 +32,16 @@
     --text-color: rgba(0, 0, 255, 1);
 }
 
+html {
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.6) 10%, black 60%);
+    background-size: 125% 125%;
+}
+
 body {
     font-family: 'Raleway';
     height: 100%;
     margin: 0;
     padding: 0;
-    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.6) 10%, black 70%);
 }
 
 .question-container {
@@ -325,7 +329,7 @@ function typePlaceholder(text, callback) {
             clearInterval(typing)
             if (callback) callback()
         }
-    }, 100)
+    }, 75)
 }
 
 function deletePlaceholder(callback) {
@@ -340,7 +344,7 @@ function deletePlaceholder(callback) {
             clearInterval(deleting)
             if (callback) callback()
         }
-    }, 50)
+    }, 25)
 }
 
 const responses = [
