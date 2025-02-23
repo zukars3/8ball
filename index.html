@@ -334,34 +334,44 @@ let triangleText = document.getElementById('triangle-text')
 let ball = document.getElementById('big-circle')
 let triangle = document.getElementById('triangle')
 
-function typePlaceholder(text, callback) {
+function typePlaceholder(text) {
     let i = 0
 
-    const typing = setInterval(() => {
+    function type() {
         input.placeholder = text.slice(0, i)
 
         i++
 
         if (i > text.length) {
-            clearInterval(typing)
-            if (callback) callback()
+            return
+        } else {
+            setTimeout(() => {
+                type()
+            }, 50)
         }
-    }, 75)
+    }
+
+    type()
 }
 
-function deletePlaceholder(callback) {
+function removePlaceholder(callback) {
     let i = input.placeholder.length
 
-    const deleting = setInterval(() => {
+    function remove() {
         input.placeholder = input.placeholder.slice(0, i)
 
         i--
         
         if (i < 0) {
-            clearInterval(deleting)
             if (callback) callback()
+        } else {
+            setTimeout(() => {
+                remove()
+            }, 25)
         }
-    }, 25)
+    }
+
+    remove()
 }
 
 const responses = [
@@ -451,13 +461,17 @@ const funnyQuestions = [
     "Will I ever win an argument?"
 ]
 
-typePlaceholder(funnyQuestions[Math.floor(Math.random() * 59)])
+cyclePlaceholder(funnyQuestions[Math.floor(Math.random() * 59)])
 
-setInterval(() => {
-    deletePlaceholder(() => {
+function cyclePlaceholder() {
+    removePlaceholder(() => {
         typePlaceholder(funnyQuestions[Math.floor(Math.random() * 59)])
     })
-}, 7000)
+
+    setTimeout(() => {
+        cyclePlaceholder()
+    }, 7000)
+}
 
 function colorPulse() {
     triangle.classList.add('pulse')
