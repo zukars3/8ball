@@ -16,7 +16,7 @@
         </div>
         <div class="question-container">
             <div class="question-input-container">
-                <input type="text" class="question-input" id="question" placeholder="Ask your question here" oninput="checkInput()">
+                <input type="text" class="question-input" id="question" oninput="checkInput()">
                 <button class="ask-button" id="ask-button" onclick="getAnswer()" disabled>...?</button>
             </div>
             <div class="question-history">
@@ -254,7 +254,7 @@ body {
         background-color: rgb(36, 36, 36);
         color: white;
         height: 60px;
-        font-size: 30px;
+        font-size: 3vw;
     }
 
     .ask-button {
@@ -307,11 +307,141 @@ body {
 
 <script>
 let questionHistory = []
+let input = document.getElementById('question')
+let askButton = document.getElementById('ask-button')
+let history = document.getElementById('history')
+let ballText = document.getElementById('ball-text')
+let ball = document.getElementById('big-circle')
+
+function typePlaceholder(text, callback) {
+    let i = 0
+
+    const typing = setInterval(() => {
+        input.placeholder = text.slice(0, i)
+
+        i++
+
+        if (i > text.length) {
+            clearInterval(typing)
+            if (callback) callback()
+        }
+    }, 100)
+}
+
+function deletePlaceholder(callback) {
+    let i = input.placeholder.length
+
+    const deleting = setInterval(() => {
+        input.placeholder = input.placeholder.slice(0, i)
+
+        i--
+        
+        if (i < 0) {
+            clearInterval(deleting)
+            if (callback) callback()
+        }
+    }, 50)
+}
+
+const responses = [
+    'It is certain',
+    'It is decidedly so',
+    'Without a doubt',
+    'Yes - definitely',
+    'You may rely on it',
+    'As I see it, yes',
+    'Most likely',
+    'Outlook good',
+    'Yes',
+    'Signs point to yes',
+    'Reply hazy, try again',
+    'Ask again later',
+    'Better not tell you now',
+    'Cannot predict now',
+    'Concentrate and ask again',
+    "Don't count on it",
+    'My reply is no',
+    'My sources say no',
+    'Outlook not so good',
+    'Very doubtful',
+    'No'
+]
+
+const funnyQuestions = [
+    "Will I ever be rich?",
+    "Is my pet judging me?",
+    "Do I have a chance with my crush?",
+    "Will my WiFi ever behave?",
+    "Should I become a professional napper?",
+    "Is my fridge just a condiment graveyard?",
+    "Am I actually a highly evolved potato?",
+    "Will I ever stop procrastinating?",
+    "Is my cat planning world domination?",
+    "Should I buy that useless gadget?",
+    "Will my phone battery last a day?",
+    "Can I survive on pizza alone?",
+    "Will my jokes ever be funny?",
+    "Is my search history suspicious?",
+    "Should I text my crush?",
+    "Will I stick to my resolutions?",
+    "Is my mirror reflection judging me?",
+    "Should I trust my cooking skills?",
+    "Will my plants ever forgive me?",
+    "Am I the main character or comic relief?",
+    "Will I ever wake up on time?",
+    "Is my dog smarter than me?",
+    "Should I start a band?",
+    "Will I ever find my other sock?",
+    "Can I pull off a mullet?",
+    "Should I become a meme?",
+    "Is my boss spying on me?",
+    "Will I ever win the lottery?",
+    "Does my goldfish remember me?",
+    "Will I ever finish my to-do list?",
+    "Should I trust my GPS?",
+    "Is my WiFi out to get me?",
+    "Will I ever stop binge-watching?",
+    "Do my neighbors hate me?",
+    "Is my bed secretly a black hole?",
+    "Will my car survive another winter?",
+    "Should I adopt 10 more cats?",
+    "Does my plant think I'm its enemy?",
+    "Will I ever stop eating snacks?",
+    "Am I just a background character?",
+    "Am I just a glitch in the system?",
+    "Will my sleep schedule ever recover?",
+    "Is my boss secretly a robot?",
+    "Will I ever escape the friend zone?",
+    "Is my phone listening to me?",
+    "Will my student loans outlive me?",
+    "Am I just a cog in the machine?",
+    "Is my pet plotting my demise?",
+    "Will I ever find true happiness?",
+    "Does my house have a ghost?",
+    "Will I ever be free from emails?",
+    "Am I living in a simulation?",
+    "Is my browser history my downfall?",
+    "Will I ever stop overthinking?",
+    "Is my soul just on backorder?",
+    "Should I be worried about AI?",
+    "Will my car break down tomorrow?",
+    "Am I one bad day from a villain arc?",
+    "Is my job slowly stealing my soul?",
+    "Will I ever win an argument?"
+]
+
+typePlaceholder(funnyQuestions[Math.floor(Math.random() * 59)])
+
+setInterval(() => {
+    deletePlaceholder(() => {
+        typePlaceholder(funnyQuestions[Math.floor(Math.random() * 59)])
+    })
+}, 7000)
 
 function checkInput() {
-    let input = document.getElementById('question').value
+    let userInput = input.value
 
-    document.getElementById('ask-button').disabled = input.length < 1
+    askButton.disabled = userInput.length < 1
 }
 
 function delay(ms) {
@@ -319,12 +449,7 @@ function delay(ms) {
 }
 
 async function getAnswer() {
-    let input = document.getElementById('question')
-    let history = document.getElementById('history')
-    let ballText = document.getElementById('ball-text')
-    let ball = document.getElementById('big-circle')
-    
-    document.getElementById('ask-button').disabled = true
+    askButton.disabled = true
     input.disabled = true
 
     ball.classList.add('shaking')
@@ -336,71 +461,7 @@ async function getAnswer() {
     for (let i = 0; i < 20; i++) {
         let number = Math.floor(Math.random() * 20)
 
-        switch (number) {
-            case 0:
-                result = 'It is certain'
-                break;
-            case 1:
-                result = 'It is decidedly so'
-                break;
-            case 2:
-                result = 'Without a doubt'
-                break;
-            case 3:
-                result = 'Yes - definitely'
-                break;
-            case 4:
-                result = 'You may rely on it'
-                break;
-            case 5:
-                result = 'As I see it, yes'
-                break;
-            case 6:
-                result = 'Most likely'
-                break;
-            case 7:
-                result = 'Outlook good'
-                break;
-            case 8:
-                result = 'Yes'
-                break;
-            case 9:
-                result = 'Signs point to yes'
-                break;
-            case 10:
-                result = 'Reply hazy, try again'
-                break;
-            case 11:
-                result = 'Ask again later'
-                break;
-            case 12:
-                result = 'Better not tell you now'
-                break;
-            case 13:
-                result = 'Cannot predict now'
-                break;
-            case 14:
-                result = 'Concentrate and ask again'
-                break;
-            case 15:
-                result = "Don't count on it"
-                break;
-            case 16:
-                result = 'My reply is no'
-                break;
-            case 17:
-                result = 'My sources say no'
-                break;
-            case 18:
-                result = 'Outlook not so good'
-                break;
-            case 19:
-                result = 'Very doubtful'
-                break;
-            default:
-                result = 'No answer'
-                break;
-            }
+        result = responses[number]
 
         setTimeout(() => {
             ballText.innerHTML = result
