@@ -5,10 +5,10 @@
     </head>
     <body>
         <div class="container">
-            <div class="big-circle" id="big-circle">
-                <div class="small-circle">
-                    <div class="triangle">
-                        <div class="triangle-text" id="ball-text">
+            <div id="big-circle">
+                <div id="small-circle">
+                    <div id="triangle">
+                        <div id="triangle-text">
                         </div>
                     </div>
                 </div>
@@ -16,8 +16,8 @@
         </div>
         <div class="question-container">
             <div class="question-input-container">
-                <input type="text" class="question-input" id="question" oninput="checkInput()">
-                <button class="ask-button" id="ask-button" onclick="getAnswer()" disabled>...?</button>
+                <input type="text" id="question" oninput="checkInput()">
+                <button id="ask-button" onclick="getAnswer()" disabled>...?</button>
             </div>
             <div class="question-history">
                 <div id="history"></div>
@@ -60,7 +60,7 @@ body {
     gap: 5px;
 }
 
-.question-input {
+#question {
     width: 100%;
     border-radius: 5px;
     background-color: rgb(36, 36, 36);
@@ -75,7 +75,7 @@ body {
     appearance: none;
 }
 
-.ask-button {
+#ask-button {
     font-family: 'Raleway';
     height: 30px;
     width: 30px;
@@ -117,7 +117,7 @@ body {
     z-index: 1;
 }
 
-.big-circle {
+#big-circle {
     height: 48vw;
     width: 48vw;
     background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.6) 10%, black 70%);
@@ -131,7 +131,7 @@ body {
     margin: auto;
 }
 
-.small-circle {
+#small-circle {
     height: 26vw;
     width: 26vw;
     background-color: black;
@@ -150,7 +150,7 @@ body {
     background: radial-gradient(circle, var(--triangle-color) 0%, black 60%);
 }
 
-.triangle {
+#triangle {
     margin-top: 6vw;
     width: 0;
     height: 0;
@@ -166,7 +166,7 @@ body {
     transition: filter 0.3s ease;
 }
 
-.triangle-text {
+#triangle-text {
     min-width: 9vw;
     margin-top: -20vw;
     font-size: 1.7vw;
@@ -240,6 +240,22 @@ body {
   animation: diagonalShake 2s ease-in-out;
 }
 
+@keyframes colorPulse {
+  0% {
+    filter: drop-shadow(0px 0px 5px var(--triangle-color));
+  }
+  50% {
+    filter: drop-shadow(0px 0px 15px var(--triangle-color));
+  }
+  100% {
+    filter: drop-shadow(0px 0px 5px var(--triangle-color));
+  }
+}
+
+.pulse {
+    animation: colorPulse 2s ease-in-out;
+}
+
 @media only screen and (max-device-width: 768px) {
     .question-container {
         height: 30vh;
@@ -254,14 +270,14 @@ body {
         gap: 15px;
     }
 
-    .question-input {
+    #question {
         background-color: rgb(36, 36, 36);
         color: white;
         height: 60px;
         font-size: 3vw;
     }
 
-    .ask-button {
+    #ask-button {
         height: 60px;
         width: 75px;
         font-size: 4vw;
@@ -283,25 +299,25 @@ body {
         z-index: 1;
     }
 
-    .big-circle {
+    #big-circle {
         height: 90vw;
         width: 90vw;
         top: 10;
         position: relative;
     }
     
-    .small-circle {
+    #small-circle {
         height: 48vw;
         width: 48vw;
     }
 
-    .triangle {
+    #triangle {
         border-left: 18vw solid transparent;
         border-right: 18vw solid transparent;
         border-top: 28vw solid black;
     }
 
-    .triangle-text {
+    #triangle-text {
         min-width: 19vw;
         margin-top: -37vw;
         font-size: 3vw;
@@ -314,8 +330,9 @@ let questionHistory = []
 let input = document.getElementById('question')
 let askButton = document.getElementById('ask-button')
 let history = document.getElementById('history')
-let ballText = document.getElementById('ball-text')
+let triangleText = document.getElementById('triangle-text')
 let ball = document.getElementById('big-circle')
+let triangle = document.getElementById('triangle')
 
 function typePlaceholder(text, callback) {
     let i = 0
@@ -442,6 +459,24 @@ setInterval(() => {
     })
 }, 7000)
 
+function colorPulse() {
+    triangle.classList.add('pulse')
+
+    setTimeout(() => {
+        removeColorPulse()
+    }, 2000)
+}
+
+colorPulse()
+
+function removeColorPulse() {
+    triangle.classList.remove('pulse')
+
+    setTimeout(() => {
+        colorPulse()
+    }, 1000)
+}
+
 function checkInput() {
     let userInput = input.value
 
@@ -468,17 +503,17 @@ async function getAnswer() {
         result = responses[number]
 
         setTimeout(() => {
-            ballText.innerHTML = result
+            triangleText.innerHTML = result
 
             if (number < 10) {
-                document.documentElement.style.setProperty('--triangle-color', 'green');
-                document.documentElement.style.setProperty('--text-color', 'green');
+                document.documentElement.style.setProperty('--triangle-color', 'green')
+                document.documentElement.style.setProperty('--text-color', 'green')
             } else if (number < 15) {
-                document.documentElement.style.setProperty('--triangle-color', 'yellow');
-                document.documentElement.style.setProperty('--text-color', 'yellow');
+                document.documentElement.style.setProperty('--triangle-color', 'yellow')
+                document.documentElement.style.setProperty('--text-color', 'yellow')
             } else {
-                document.documentElement.style.setProperty('--triangle-color', 'red');
-                document.documentElement.style.setProperty('--text-color', 'red');
+                document.documentElement.style.setProperty('--triangle-color', 'red')
+                document.documentElement.style.setProperty('--text-color', 'red')
             }
         }, 15 * i)
 
